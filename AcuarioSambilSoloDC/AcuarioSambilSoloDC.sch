@@ -2175,4 +2175,8 @@ Wire Notes Line
 	4200 5300 4200 4650
 Text Notes 4250 5250 0    50   ~ 0
 REAL TIME CLOCK
+Text Label 7400 950  0    60   ~ 0
+21(SCL)
+Text Label 7400 850  0    60   ~ 0
+20(SDA)
 $EndSCHEMATC
