@@ -629,13 +629,13 @@ F 3 "http://www.infineon.com/dgdl/Application-Note-TLE8110EE_driving_UniPolarSte
 	1    0    0    -1  
 $EndComp
 Text Label 2800 2200 0    50   ~ 0
-B2
+MB1
 Text Label 3000 2200 0    50   ~ 0
-B3
+MB2
 Text Label 2450 2450 0    50   ~ 0
-B4
+MB3
 Text Label 2450 2650 0    50   ~ 0
-B5
+MB4
 Wire Wire Line
 	2600 2450 2450 2450
 Wire Wire Line
@@ -658,13 +658,13 @@ $EndComp
 Wire Wire Line
 	2700 2200 2700 2250
 Text Label 3250 3450 0    50   ~ 0
-B2
+MB1
 Text Label 3250 3550 0    50   ~ 0
-B3
+MB2
 Text Label 3250 3650 0    50   ~ 0
-B4
+MB3
 Text Label 3250 3750 0    50   ~ 0
-B5
+MB4
 $Comp
 L conn:Conn_01x04 J7
 U 1 1 5D8CB9C7
