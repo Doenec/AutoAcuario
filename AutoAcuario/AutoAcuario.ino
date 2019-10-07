@@ -1,5 +1,16 @@
 
 // ASIGNACION DE PINES
+  //Para probar el codigo en proteus
+const  int adclRT   =A0;  
+const  int adclMT   =A1;  
+const  int adclsalt =A2;  
+const  int adclfood =A3;  
+const  int adcph    =A4;  
+const  int adcammonia=A5;  
+const  int adcecMT  =A6;  
+const  int adcecRT  =A7;  
+const  int setDatos =4;  
+
   
   //Sensores de nivel
 const  int trigRT  = 34;
@@ -67,7 +78,17 @@ const  int str5=A12;
 const  int stp5=A13;
   
 //VARIABLES
+float ammonia =0;//Concentracion de amonio
+float ph      =0;//ph en tanque de circulacion
+float ecMT    =0;//ec en tanque de mezclas
+float ecRT    =0;//ec en tanque de circulacion
+float lfood   =0;//nivel de comida
+float lsalt   =0;//nivel de sal
+float lRT     =0;//nivel en tanque de circulacion
+float lMT     =0;//nivel en tanque de mezclas
 
+// Retardo de pulsador
+int debounce=150;
 
 void setup() {
   //CONFIGURACION DE PUERTOS  
@@ -106,6 +127,33 @@ void setup() {
               }
   void loop()
   {
+    if(digitalRead(setDatos)==0){
+      delay(debounce);
+      int adc=0;
+      ammonia  =analogRead(adcammonia);
+      ammonia  =ammonia*0.001/1023;
+      ph       =analogRead(adcph);
+      ph       =ph*14/1023;
+      ecMT     =analogRead(adcecMT);
+      ecMT     =ecMT*30/1023;
+      ecMT     =1+ecMT/100;
+      ecRT     =analogRead(adcecRT);
+      ecRT     =ecRT*30/1023;
+      ecRT     =1+ecRT/100;
+      lMT      =analogRead(adclMT);
+      lMT      =lMT*795;
+      lRT      =analogRead(adclRT);
+      lRT      =lRT*1142/1023;
+      lfood    =analogRead(adclfood);
+      lfood    =lfood*100/1023;
+      lsalt    =analogRead(adclsalt);
+      lsalt    =lsalt*100/1023;
+
+      
+      }
+
+
+
     
     }  
  
