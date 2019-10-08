@@ -1,3 +1,6 @@
+#include <LiquidCrystal_I2C.h>
+
+LiquidCrystal_I2C lcd(0x27,20,4);
 
 // ASIGNACION DE PINES
   //Para probar el codigo en proteus
@@ -10,6 +13,15 @@ const  int adcammonia=A5;
 const  int adcecMT  =A6;  
 const  int adcecRT  =A7;  
 const  int setDatos =4;  
+
+float pammonia =0;//Concentracion de amonio
+float pph      =0;//ph en tanque de circulacion
+float pecMT    =0;//ec en tanque de mezclas
+float pecRT    =0;//ec en tanque de circulacion
+float plfood   =0;//nivel de comida
+float plsalt   =0;//nivel de sal
+float plRT     =12.31;//nivel en tanque de circulacion
+float plMT     =12.310;//nivel en tanque de mezclas
 
   
   //Sensores de nivel
@@ -69,7 +81,7 @@ const  int val7= 35;
 const  int str1=A15;
 const  int stp1=A14;
 const  int str2=53;
-const  int stp2=56;
+const  int stp2=51;
 const  int str3=49;
 const  int stp3=A9;
 const  int str4=A10;
@@ -84,13 +96,15 @@ float ecMT    =0;//ec en tanque de mezclas
 float ecRT    =0;//ec en tanque de circulacion
 float lfood   =0;//nivel de comida
 float lsalt   =0;//nivel de sal
-float lRT     =0;//nivel en tanque de circulacion
-float lMT     =0;//nivel en tanque de mezclas
-
+float lRT     =12.31;//nivel en tanque de circulacion
+float lMT     =12.310;//nivel en tanque de mezclas
+//FUNCIONES
+String funcion []={"Alimentando", "Desague",};
 // Retardo de pulsador
 int debounce=150;
 
 void setup() {
+  Serial1.begin(9600);
   //CONFIGURACION DE PUERTOS  
     //Puertos de salida
       //Motores de dispensadores
@@ -109,10 +123,7 @@ void setup() {
     pinMode(val3, OUTPUT);
     pinMode(val4, OUTPUT);
     pinMode(val5, OUTPUT);
-    pinMode(val6, OUTPUT);
-    pinMode(val7, OUTPUT);
-      
-      //Reles para bombas
+     //Bombas
     pinMode(str1, OUTPUT);
     pinMode(stp1, OUTPUT);
     pinMode(str2, OUTPUT);
@@ -123,38 +134,90 @@ void setup() {
     pinMode(stp4, OUTPUT);
     pinMode(str5, OUTPUT);
     pinMode(stp5, OUTPUT);
- 
+    //Iniciar LCD
+    lcd.init();
+          lcd.backlight();
+  lcd.setCursor(0,0);//Primera fila
+  lcd.print("    Acuario");
+  lcd.setCursor(0,1);//Segunda fila
+  lcd.print("     Sambil");
+  lcd.setCursor(0,2);//Tercera fila
+  lcd.print("  San");
+  lcd.setCursor(0,3);//Cuarta fila
+  lcd.print("Cristobal");
+  delay(3000); 
+  lcd.clear();
               }
   void loop()
   {
-    if(digitalRead(setDatos)==0){
-      delay(debounce);
-      int adc=0;
-      ammonia  =analogRead(adcammonia);
-      ammonia  =ammonia*0.001/1023;
-      ph       =analogRead(adcph);
-      ph       =ph*14/1023;
-      ecMT     =analogRead(adcecMT);
-      ecMT     =ecMT*30/1023;
-      ecMT     =1+ecMT/100;
-      ecRT     =analogRead(adcecRT);
-      ecRT     =ecRT*30/1023;
-      ecRT     =1+ecRT/100;
-      lMT      =analogRead(adclMT);
-      lMT      =lMT*795;
-      lRT      =analogRead(adclRT);
-      lRT      =lRT*1142/1023;
-      lfood    =analogRead(adclfood);
-      lfood    =lfood*100/1023;
-      lsalt    =analogRead(adclsalt);
-      lsalt    =lsalt*100/1023;
 
-      
+    
+      //LEER DATOS DE POTENCIOMETROS
+      pammonia  =analogRead(adcammonia);
+      pammonia  =pammonia*0.002/1023;
+      pph       =analogRead(adcph);
+      pph       =pph*14/1023;
+      pecMT     =analogRead(adcecMT);
+      pecMT     =pecMT*30/1023;
+      pecMT     =1+pecMT/100;
+      pecRT     =analogRead(adcecRT);
+      pecRT     =pecRT*30/1023;
+      pecRT     =1+pecRT/100;
+      plMT      =analogRead(adclMT);
+      plMT      =plMT*795/1023;
+      plRT      =analogRead(adclRT);
+      plRT      =plRT*1142/1023;
+      plfood    =analogRead(adclfood);
+      plfood    =plfood*100/1023;
+      plsalt    =analogRead(adclsalt);
+      plsalt    =plsalt*100/1023;
+      Serial1.print("LMT:");
+      Serial1.println(plMT);
+      Serial1.print("LRT:");
+      Serial1.println(plRT);
+      Serial1.print("LMT:");
+      Serial1.println();
+      Serial1.print("LMT:");
+      Serial1.println();
+      Serial1.print("LMT:");
+      Serial1.println();
+              //LEER DATOS DE POTENCIOMETROS
+              if(digitalRead(setDatos)==0){
+              delay(debounce);
+              ammonia =pammonia;//Concentracion de amonio
+              ph      =pph;//ph en tanque de circulacion
+              ecMT    =pecMT;//ec en tanque de mezclas
+              ecRT    =pecRT;//ec en tanque de circulacion
+              lfood   =plfood;//nivel de comida
+              lsalt   =plsalt;//nivel de sal
+              lRT     =plRT;//nivel en tanque de circulacion
+              lMT     =plMT;//nivel en tanque de mezclas
+              
       }
 
 
-
+      //MOSTRAR VALORES EN PANTALLA LCD
     
+  lcd.setCursor(0,0);//Primera fila
+  lcd.print("LMT:");
+  lcd.print(lMT, 0);
+  lcd.print("LRT:");
+  lcd.print(lRT,0);
+  lcd.setCursor(0,1);//Segunda fila
+  lcd.print("LFOOD:");
+  lcd.print(lfood,0);
+  lcd.print("LSALT");
+  lcd.print(lsalt,0);
+  lcd.setCursor(-4,2);//Tercera fila
+  lcd.print("CERT");
+  lcd.print(ecMT);
+  lcd.print("CEMT");
+  lcd.print(ecMT);
+   lcd.setCursor(-4,3);//Cuarta fila
+  lcd.print(funcion[1]);
+  delay(100); 
+  lcd.clear();
+    salt(5);
     }  
  
 
