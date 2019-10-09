@@ -12,7 +12,13 @@ const  int adcph    =A4;
 const  int adcammonia=A5;  
 const  int adcecMT  =A6;  
 const  int adcecRT  =A7;  
-const  int setDatos =4;  
+const  int setDatos =4;
+const  int alimentar=5;
+const  int llenarmt =6;
+const  int llenarrt =7;
+const  int desague  =8;
+const  int salinidad=9;
+  
 
 float pammonia =0;//Concentracion de amonio
 float pph      =0;//ph en tanque de circulacion
@@ -102,10 +108,23 @@ float lMT     =12.310;//nivel en tanque de mezclas
 String funcion []={"Alimentando", "Desague",};
 // Retardo de pulsador
 int debounce=150;
+//Retardo proteus
+int   proteus     =700;
+bool  horapar     =HIGH;
+long  ultimoTiempo=0;
 
 void setup() {
-  Serial1.begin(9600);
-  //CONFIGURACION DE PUERTOS  
+  Serial2.begin(9600);
+  //CONFIGURACION DE PUERTOS
+
+    //Botones para proteus
+    pinMode(setDatos,INPUT_PULLUP);
+    pinMode(alimentar,INPUT_PULLUP);
+    pinMode(llenarmt,INPUT_PULLUP);
+    pinMode(llenarrt,INPUT_PULLUP);
+    pinMode(desague,INPUT_PULLUP);
+    pinMode(salinidad,INPUT_PULLUP);
+
     //Puertos de salida
       //Motores de dispensadores
     pinMode(ma1, OUTPUT);
@@ -123,6 +142,8 @@ void setup() {
     pinMode(val3, OUTPUT);
     pinMode(val4, OUTPUT);
     pinMode(val5, OUTPUT);
+    pinMode(val6, OUTPUT);
+    pinMode(val7, OUTPUT);
      //Bombas
     pinMode(str1, OUTPUT);
     pinMode(stp1, OUTPUT);
@@ -145,7 +166,7 @@ void setup() {
   lcd.print("  San");
   lcd.setCursor(0,3);//Cuarta fila
   lcd.print("Cristobal");
-  delay(3000); 
+  delay(1000); 
   lcd.clear();
               }
   void loop()
@@ -159,10 +180,10 @@ void setup() {
       pph       =pph*14/1023;
       pecMT     =analogRead(adcecMT);
       pecMT     =pecMT*30/1023;
-      pecMT     =1+pecMT/100;
+      pecMT     =1.1+pecMT/100;
       pecRT     =analogRead(adcecRT);
       pecRT     =pecRT*30/1023;
-      pecRT     =1+pecRT/100;
+      pecRT     =1.1+pecRT/100;
       plMT      =analogRead(adclMT);
       plMT      =plMT*795/1023;
       plRT      =analogRead(adclRT);
@@ -171,19 +192,23 @@ void setup() {
       plfood    =plfood*100/1023;
       plsalt    =analogRead(adclsalt);
       plsalt    =plsalt*100/1023;
-      Serial1.print("LMT:");
-      Serial1.println(plMT);
-      Serial1.print("LRT:");
-      Serial1.println(plRT);
-      Serial1.print("LMT:");
-      Serial1.println();
-      Serial1.print("LMT:");
-      Serial1.println();
-      Serial1.print("LMT:");
-      Serial1.println();
+      Serial2.print("LMT:");
+      Serial2.println(plMT);
+      Serial2.print("LRT:");
+      Serial2.println(plRT);
+      Serial2.print("Ammonia:");
+      Serial2.println(pammonia);
+      Serial2.print("PH:");
+      Serial2.println(pph);
+      Serial2.print("CERT:");
+      Serial2.println(pecRT);
+      Serial2.print("CEMT:");
+      Serial2.println(pecMT);
               //LEER DATOS DE POTENCIOMETROS
-              if(digitalRead(setDatos)==0){
+              if(digitalRead(setDatos)==0)  {
+                valvulas(1,1,1,1,1,1,1);
               delay(debounce);
+                valvulas(0,0,0,0,0,0,0);
               ammonia =pammonia;//Concentracion de amonio
               ph      =pph;//ph en tanque de circulacion
               ecMT    =pecMT;//ec en tanque de mezclas
@@ -193,31 +218,102 @@ void setup() {
               lRT     =plRT;//nivel en tanque de circulacion
               lMT     =plMT;//nivel en tanque de mezclas
               
-      }
+                                            }
+              
+              if(digitalRead(alimentar)==0){
+              delay(debounce);
+              valvulas(0,0,0,0,0,0,0);              
+              digitalWrite(str1, LOW);
+              digitalWrite(str2, LOW);
+              digitalWrite(str3, LOW);
+              food(15);
+              delay(proteus);
+               
+                                          }
+              if(digitalRead(llenarmt)==0){
+              delay(debounce);
+              valvulas(2,2,2,2,2,1,2);
+              digitalWrite(str3, HIGH);
+              delay(proteus); 
+              valvulas(2,2,2,2,2,0,2);
+              digitalWrite(str3, LOW);
+                                          }
+              if(digitalRead(llenarrt)==0){
+              delay(debounce);
+              
+              valvulas(2,2,0,0,1,2,2);
+              delay(proteus);
+              valvulas(2,2,0,1,0,2,2);
+              delay(proteus);
+               
+                                          }
+              if(digitalRead(desague)==0){
+               valvulas(2,2,1,2,2,2,2); 
+              delay(debounce);              
+              delay(proteus);
+              valvulas(0,0,0,0,0,0,0);
+              delay(proteus);
+               
+                                          }
+
+              if(digitalRead(salinidad)==0){
+              delay(debounce);
+              valvulas(2,2,2,1,0,0,2);
+              salt(10);
+              valvulas(2,2,2,0,1,0,2);
+              digitalWrite(str1, HIGH);
+              delay(proteus);
+              digitalWrite(str3, LOW);
+              valvulas(2,2,2,1,0,0,2);
+               
+                                          }
 
 
       //MOSTRAR VALORES EN PANTALLA LCD
-    
+    lcd.clear();
   lcd.setCursor(0,0);//Primera fila
   lcd.print("LMT:");
   lcd.print(lMT, 0);
   lcd.print("LRT:");
   lcd.print(lRT,0);
   lcd.setCursor(0,1);//Segunda fila
-  lcd.print("LFOOD:");
+  lcd.print("FOOD:");
   lcd.print(lfood,0);
-  lcd.print("LSALT");
+  lcd.print("SAL:");
   lcd.print(lsalt,0);
   lcd.setCursor(-4,2);//Tercera fila
-  lcd.print("CERT");
+  lcd.print("CER:");
   lcd.print(ecMT);
-  lcd.print("CEMT");
+  lcd.print("CEM:");
   lcd.print(ecMT);
-   lcd.setCursor(-4,3);//Cuarta fila
+  lcd.setCursor(-4,3);//Cuarta fila
   lcd.print(funcion[1]);
   delay(100); 
-  lcd.clear();
-    salt(5);
+  
+    
+
+  if (millis() - ultimoTiempo >=  proteus*5) {
+    horapar=!horapar;
+    ultimoTiempo = millis();
+    if (horapar){
+      
+      digitalWrite(str1, LOW);
+      digitalWrite(str2, HIGH);
+      digitalWrite(str3, LOW);
+      valvulas(1,0,2,0,2,2,2);
+      }
+      else 
+      {
+      digitalWrite(str1, HIGH);
+      digitalWrite(str2, LOW);
+      digitalWrite(str3, HIGH);
+      valvulas(0,1,2,1,2,2,2); 
+      
+        }
+    
+    
+    
+    }
     }  
  
 
@@ -271,8 +367,9 @@ void bombas(int nBomba, bool orden  ){
     break;
   }
 
-  delay(2000);
+  //delay(2000);// TIEMPO PARA ACTIVAR
     //Apagar reles
+    /*
     digitalWrite(str1, LOW);
     digitalWrite(stp1, LOW);
     digitalWrite(str2, LOW);
@@ -283,7 +380,7 @@ void bombas(int nBomba, bool orden  ){
     digitalWrite(stp4, LOW);
     digitalWrite(str5, LOW);
     digitalWrite(stp5, LOW); 
-             }
+      */       }
 
 //FUNCION PARA DISPENSADOR DE COMIDA
 void food(int pasos){

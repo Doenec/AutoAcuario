@@ -1164,7 +1164,7 @@ Text HLabel 4250 3700 0    50   Input ~ 0
 Text HLabel 4250 3800 0    50   Input ~ 0
 49
 Text HLabel 4250 3900 0    50   Input ~ 0
-56(MOSI)
+51(MOSI)
 Text HLabel 4250 4000 0    50   Input ~ 0
 53(SS)
 Wire Wire Line
