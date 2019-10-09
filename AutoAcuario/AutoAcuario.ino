@@ -26,8 +26,8 @@ float pecMT    =0;//ec en tanque de mezclas
 float pecRT    =0;//ec en tanque de circulacion
 float plfood   =0;//nivel de comida
 float plsalt   =0;//nivel de sal
-float plRT     =12.31;//nivel en tanque de circulacion
-float plMT     =12.310;//nivel en tanque de mezclas
+float plRT     =0;//nivel en tanque de circulacion
+float plMT     =0;//nivel en tanque de mezclas
 
   
   //Sensores de nivel
@@ -59,10 +59,12 @@ const  int txAmonio= 14;
   
 //ACTUADORES
   //Motores paso a paso
+  //Sal
 const  int ma1 = 18;
 const  int ma2 = 19;
 const  int ma3 = 23;
 const  int ma4 = 25;
+  //food
 const  int mb1 = 27;
 const  int mb2 = 29;
 const  int mb3 = 31;
@@ -242,8 +244,10 @@ void setup() {
               delay(debounce);
               
               valvulas(2,2,0,0,1,2,2);
-              delay(proteus);
+              digitalWrite(str3, HIGH);
+              delay(proteus*2);
               valvulas(2,2,0,1,0,2,2);
+              digitalWrite(str3, LOW);
               delay(proteus);
                
                                           }
