@@ -2,90 +2,93 @@
 
 LiquidCrystal_I2C lcd(0x27,20,4);
 
-// ASIGNACION DE PINES
-  //Para probar el codigo en proteus
-const  int adclRT   =A0;  
-const  int adclMT   =A1;  
-const  int adclsalt =A2;  
-const  int adclfood =A3;  
-const  int adcph    =A4;  
-const  int adcammonia=A5;  
-const  int adcecMT  =A6;  
-const  int adcecRT  =A7;  
-const  int setDatos =4;
-const  int alimentar=5;
-const  int llenarmt =6;
-const  int llenarrt =7;
-const  int desague  =8;
-const  int salinidad=9;
+// ASIGNACION DE PINES EN PROTEUS
+const  int adclRT     =A0;//  
+const  int adclMT     =A1;  
+const  int adclsalt   =A2;  
+const  int adclfood   =A3;  
+const  int adcph      =A4;  
+const  int adcammonia =A5;  
+const  int adcecMT    =A6;  
+const  int adcecRT    =A7;  
+const  int setDatos   =4;
+const  int alimentar  =5;
+const  int llenarmt   =6;
+const  int llenarrt   =7;
+const  int desague    =8;
+const  int salinidad  =9;
   
+//POTENCIÓMETROS DE VARIABLES EN PROTEUS
+float pammonia =0;//CONCENTRACIÓN DE AMONIO
+float pph      =0;//PH EN TANQUE DE RECIRCULACIÓN
+float pecMT    =0;//CONDUCTIVIDAD ELÉCTRICA EN TANQUE DE MEZCLA
+float pecRT    =0;//CONDUCTIVIDAD ELÉCTRICA EN TANQUE DE RECIRCULACIÓN
+float plfood   =0;//NIVEL EN TOLVA DE COMIDA
+float plsalt   =0;//nivel EN TOLVA DE SAL
+float plRT     =0;//NIVEL EN TANQUE DE RECIRCULACIÓN
+float plMT     =0;//NIVEL EN TANQUE DE MEZCLAS
 
-float pammonia =0;//Concentracion de amonio
-float pph      =0;//ph en tanque de circulacion
-float pecMT    =0;//ec en tanque de mezclas
-float pecRT    =0;//ec en tanque de circulacion
-float plfood   =0;//nivel de comida
-float plsalt   =0;//nivel de sal
-float plRT     =0;//nivel en tanque de circulacion
-float plMT     =0;//nivel en tanque de mezclas
+// S E N S O R E S//
 
+//SENSORES DE NIVEL
+const  int trigRT     =34;//
+const  int echoRT     =36;
+const  int trigMT     =50;
+const  int echoMT     =52;
+const  int trigSalt   =42;
+const  int echoSalt   =44;
+const  int trigFood   =38;
+const  int echoFood   =40;
   
-  //Sensores de nivel
-const  int trigRT  = 34;
-const  int echoRT  = 36;
-const  int trigMT  = 50;
-const  int echoMT  = 52;
-const  int trigSalt= 42;
-const  int echoSalt= 44;
-const  int trigFood= 38;
-const  int echoFood= 40;
+//SENSOR DE PH
+const  int rxPH   =28;
+const  int txPH   =26;
   
-  //Sensor de PH
-const  int rxPH    = 28;
-const  int txPH    = 26;
+//SENSORES DE ELECTROCONDUCTIVIDAD
+const  int rxECMT  =34;
+const  int txECMT  =36;
+const  int rxECRT  =32;
+const  int txECRT  =30;
+
+//BUS DE SENSORES 1WIRE
+const  int oneWire =22;
+
+//SENSOR DE AMONÍACO
+const  int rxAmonio =15;
+const  int txAmonio =14;
   
-  //Sensores de electroconductividad
-const  int rxECMT  = 34;
-const  int txECMT  = 36;
-const  int rxECRT  = 32;
-const  int txECRT  = 30;
+//A C T U A D O R E S//
 
-  //Bus de sensores 1Wire
-const  int oneWire = 22;
+//MOTOR PAP SAL
+const  int ma1 =18;
+const  int ma2 =19;
+const  int ma3 =23;
+const  int ma4 =25;
 
-  //Sensor de amoniaco
-const  int rxAmonio= 15;
-const  int txAmonio= 14;
-  
-//ACTUADORES
-  //Motores paso a paso
-  //Sal
-const  int ma1 = 18;
-const  int ma2 = 19;
-const  int ma3 = 23;
-const  int ma4 = 25;
-  //food
-const  int mb1 = 27;
-const  int mb2 = 29;
-const  int mb3 = 31;
-const  int mb4 = 33;
 
-  //Indicadores
-const  int buzz= 3;
-const  int ledR= 7;
-const  int ledG= 6;
-const  int ledB= 5;
+//MOTOR PAP COMIDA 
+const  int mb1 =27;
+const  int mb2 =29;
+const  int mb3 =31;
+const  int mb4 =33;
 
-  //Valvulas
-const  int val1= 47;
-const  int val2= 45;
-const  int val3= 43;
-const  int val4= 41;
-const  int val5= 39;
-const  int val6= 37;
-const  int val7= 35;
 
-  //BOMBAS
+//INDICADORES VISUALES Y SÓNICOS
+const  int buzz =3;
+const  int ledR =7;
+const  int ledG =6;
+const  int ledB =5;
+
+//ELECTROVÁLVULAS
+const  int val1 =47;
+const  int val2 =45;
+const  int val3 =43;
+const  int val4 =41;
+const  int val5 =39;
+const  int val6 =37;
+const  int val7 =35;
+
+//RELÉS BOMBAS CENTRÍFUGAS
 const  int str1=A15;
 const  int stp1=A14;
 const  int str2=53;
@@ -97,7 +100,7 @@ const  int stp4=A11;
 const  int str5=A12;
 const  int stp5=A13;
   
-//VARIABLES
+//VARIABLES REALES
 float ammonia =0;//Concentracion de amonio
 float ph      =0;//ph en tanque de circulacion
 float ecMT    =0;//ec en tanque de mezclas
@@ -119,7 +122,7 @@ void setup() {
   Serial2.begin(9600);
   //CONFIGURACION DE PUERTOS
 
-    //Botones para proteus
+    //B O T O N E S  P R O T E U S
     pinMode(setDatos,INPUT_PULLUP);
     pinMode(alimentar,INPUT_PULLUP);
     pinMode(llenarmt,INPUT_PULLUP);
@@ -127,8 +130,9 @@ void setup() {
     pinMode(desague,INPUT_PULLUP);
     pinMode(salinidad,INPUT_PULLUP);
 
-    //Puertos de salida
-      //Motores de dispensadores
+    //P U E R T O S  D E  S A L I D A//
+    
+    //MOTORES PAP DISPENSADORES
     pinMode(ma1, OUTPUT);
     pinMode(ma2, OUTPUT);
     pinMode(ma3, OUTPUT);
@@ -138,7 +142,7 @@ void setup() {
     pinMode(mb3, OUTPUT);
     pinMode(mb4, OUTPUT);
     
-      //Valvulas
+    //ELECTROVÁLVULAS
     pinMode(val1, OUTPUT);
     pinMode(val2, OUTPUT);
     pinMode(val3, OUTPUT);
@@ -146,7 +150,8 @@ void setup() {
     pinMode(val5, OUTPUT);
     pinMode(val6, OUTPUT);
     pinMode(val7, OUTPUT);
-     //Bombas
+    
+    //BOMAS CENTRÍFUGAS
     pinMode(str1, OUTPUT);
     pinMode(stp1, OUTPUT);
     pinMode(str2, OUTPUT);
@@ -157,9 +162,11 @@ void setup() {
     pinMode(stp4, OUTPUT);
     pinMode(str5, OUTPUT);
     pinMode(stp5, OUTPUT);
-    //Iniciar LCD
+
+    
+  //INICIALIZACIÓN LCD
     lcd.init();
-          lcd.backlight();
+    lcd.backlight();
   lcd.setCursor(0,0);//Primera fila
   lcd.print("    Acuario");
   lcd.setCursor(0,1);//Segunda fila
@@ -211,14 +218,14 @@ void setup() {
                 valvulas(1,1,1,1,1,1,1);
               delay(debounce);
                 valvulas(0,0,0,0,0,0,0);
-              ammonia =pammonia;//Concentracion de amonio
-              ph      =pph;//ph en tanque de circulacion
-              ecMT    =pecMT;//ec en tanque de mezclas
-              ecRT    =pecRT;//ec en tanque de circulacion
-              lfood   =plfood;//nivel de comida
-              lsalt   =plsalt;//nivel de sal
-              lRT     =plRT;//nivel en tanque de circulacion
-              lMT     =plMT;//nivel en tanque de mezclas
+              ammonia =pammonia;//CONCENTRACIÓN DE AMONIO
+              ph      =pph;//PH EN TANQUE DE RECIRCULACIÓN
+              ecMT    =pecMT;//ELECTROCONDUCTIVIDAD EN TANQUE DE MEZCLA
+              ecRT    =pecRT;//ELECTROCONDUCTIVIDAD EN TANQUE DE RECIRCULACIÓN
+              lfood   =plfood;//NIVEL EN TOLVA DE COMIDA
+              lsalt   =plsalt;//NIVEL EN TOLVA DE SAL
+              lRT     =plRT;//NIVEL EN TANQUE DE RECIRCULACIÓN
+              lMT     =plMT;//NIVEL EN TANQUE DE MEZCLA
               
                                             }
               
@@ -273,8 +280,8 @@ void setup() {
                                           }
 
 
-      //MOSTRAR VALORES EN PANTALLA LCD
-    lcd.clear();
+  //MOSTRAR VALORES EN PANTALLA LCD
+  lcd.clear();
   lcd.setCursor(0,0);//Primera fila
   lcd.print("LMT:");
   lcd.print(lMT, 0);
@@ -342,8 +349,7 @@ void valvulas(int v1, int v2,int v3, int v4,int v5, int v6, int v7)
 }
 
 void bombas(int nBomba, bool orden  ){
-  //Apagar o encencer bombas mediante
-  //usando reles para controlar contactores
+  //APAGAR O ENCENDER BOMBAS USANDO INTEGRADO DARLINGTON
   switch (nBomba) {
     case 1:
           if(orden==1)digitalWrite(str1, HIGH);
@@ -401,7 +407,7 @@ void food(int pasos){
     digitalWrite(mb2, sec[posSec][ 1]);
     digitalWrite(mb3, sec[posSec][ 2]);
     digitalWrite(mb4, sec[posSec][ 3]);
-    delay(200);//time between steps
+    delay(200);//TIEMPO ENTRE PASOS
     posSec++;
     } 
   }
@@ -414,13 +420,13 @@ void salt(int pasos){
             {0,1,0,1}};
   
   for (int x=0;x<pasos;x++ ) {
-    if (posSec==4)posSec=0;//return the position to zero
+    if (posSec==4)posSec=0;//RETORNAR A CERO
     
     digitalWrite(ma1, sec[posSec][ 0]);
     digitalWrite(ma2, sec[posSec][ 1]);
     digitalWrite(ma3, sec[posSec][ 2]);
     digitalWrite(ma4, sec[posSec][ 3]);
-    delay(200);//time between steps
+    delay(200);//TIEMPO ENTRE PASOS
     posSec++;
     } 
   }
