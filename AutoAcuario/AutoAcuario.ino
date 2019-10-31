@@ -117,7 +117,7 @@ int debounce=150;
 int   proteus     =700;
 bool  horapar     =HIGH;
 long  ultimoTiempo=0;
-
+int   hora        =0;
 void setup() {
   Serial2.begin(9600);
   //CONFIGURACION DE PUERTOS
@@ -229,7 +229,7 @@ void setup() {
               
                                             }
               
-              if(digitalRead(alimentar)==0){
+              if(digitalRead(alimentar)==0||hora==8){
               delay(debounce);
               valvulas(0,0,0,0,0,0,0);              
               digitalWrite(str1, LOW);
@@ -298,13 +298,17 @@ void setup() {
   lcd.print("CEM:");
   lcd.print(ecMT);
   lcd.setCursor(-4,3);//Cuarta fila
-  lcd.print(funcion[1]);
+  lcd.print("Hora:");
+  lcd.print(hora);
+  
   delay(100); 
   
     
 
   if (millis() - ultimoTiempo >=  proteus*5) {
     horapar=!horapar;
+    hora++;
+    if(hora==24)hora=0;
     ultimoTiempo = millis();
     if (horapar){
       
